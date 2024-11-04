@@ -1,5 +1,7 @@
 const Revenue = require('../models/revenue');
-
+const User = require('../models/user');
+const Product = require('../models/product');
+const Order = require('../models/orders');
 // Hàm lấy tổng doanh thu
 exports.getTotalRevenue = async (req, res) => {
   try {
@@ -16,3 +18,16 @@ exports.getTotalRevenue = async (req, res) => {
     res.status(500).json({ status: 'failed', message: err.message });
   }
 };
+
+
+exports.getCountDrashBoard = async (req, res,next)=>{
+  try{
+      const countUser = await User.countDocuments({});
+      const countProduct = await Product.countDocuments({});
+      const countOrder = await Order.countDocuments({});
+      res.json({  countUser, countProduct, countOrder });
+
+  }catch(err){
+      res.json({err:err.message})
+  }
+}

@@ -1,6 +1,7 @@
 const User = require('../models/user');
+
 const jwt = require('jsonwebtoken');
-const bycript = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const lodash = require('lodash');
 const cloudinary = require('../untils/cloudinary');
 
@@ -18,7 +19,7 @@ exports.editProfile = async (req, res, next) => {
             data.image = url.url;
         }
         if (data.password) {
-            bycript.hash(data.password, 10, function (err, hash) {
+            bcrypt.hash(data.password, 10, function (err, hash) {
                 if (!err) {
                     user.password = hash;
                     user.save();
@@ -62,6 +63,7 @@ exports.changeRoleByAdmin = async (req, res, next) => {
     }
 }
 
+
 exports.deleteOneUser = async (req, res, next) => {
     try {
         const { userID } = req.params;
@@ -102,7 +104,6 @@ exports.getAllUser = async (req, res, next) => {
     }
 }
 
-
 exports.getOneUser = async (req, res, next) => {
     try {
         const { userID } = req.params;
@@ -114,6 +115,30 @@ exports.getOneUser = async (req, res, next) => {
     }
     catch (err) {
 
+    }
+}
+
+// Hàm updateUser để cập nhật thông tin người dùng
+exports.updateUser = async (req, res, next) => {
+    try {
+        const { userID } = req.params;
+        const { firstName, lastName, phone, password } = req.body;
+
+        const user = await User.findByIdAndUpdate(userID, {
+            firstName,
+            lastName,
+            phone,
+            password
+        }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ status: 'success', user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 }
 
@@ -255,3 +280,19 @@ exports.searchUserByEmail = async (req, res, next) => {
         console.log(err);
     }
 }
+
+
+exports.getTotalUsers = async (req, res, next) => {
+    try {
+        const totalUsers = await User.countDocuments({});
+        res.json({
+            status: "success",
+            totalUsers
+        });
+    } catch (err) {
+        res.json({
+            status: "failed",
+            err
+        });
+    }
+};

@@ -1,8 +1,8 @@
-
 const Orders = require('../models/orders');
 const User = require('../models/user');
-const product = require('../models/product');
+const Product = require('../models/product'); // Đảm bảo import đúng model Product
 const Revenue = require('../models/revenue');
+
 exports.getAllOrders = async (req, res, next) => {
     try {
         const { status } = req.query;
@@ -148,17 +148,32 @@ exports.changeStatusOrders = async (req, res) => {
 exports.createOrders = async (req, res, next) => {
     try {
         const data = req.body;
+
+        // Lặp qua từng sản phẩm trong đơn hàng và giảm số lượng sản phẩm
+        for (const item of data.productDetail) {
+            const product = await Product.findById(item.productID);
+            if (product.inStock < item.quantity) {
+                return res.status(400).json({
+                    status: "failed",
+                    message: `Sản phẩm ${product.title} không đủ số lượng`
+                });
+            }
+            product.inStock -= item.quantity;
+            await product.save();
+        }
+
         const newOrder = await Orders.create(data);
         res.status(200).json({
             status: "success",
             order: newOrder
-        })
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: "failed",
+            message: err.message
+        });
     }
-    catch (err) {
-
-    }
-}
-
+};
 
 exports.deleteOneOrder = async (req, res, next) => {
     try {

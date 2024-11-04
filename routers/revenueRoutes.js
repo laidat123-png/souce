@@ -4,5 +4,6 @@ const revenueController = require('../controllers/revenueController');
 
 // Định nghĩa route lấy tổng doanh thu
 router.get("/total", revenueController.getTotalRevenue);
+router.get("/count-drash-board", revenueController.getCountDrashBoard);
 
 module.exports = router;
