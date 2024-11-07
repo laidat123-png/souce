@@ -124,7 +124,7 @@ exports.changeStatusOrders = async (req, res) => {
             const totalAmount = updatedOrder.productDetail.reduce((acc, item) => {
               return acc + item.productID.price * item.quantity;
             }, 0);
-            console.log("tong tien",totalAmount);
+            
             await Revenue.create({
               orderID: updatedOrder._id,
               totalAmount,
