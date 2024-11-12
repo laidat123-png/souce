@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
     price: { type: Number, require: true },
     inStock: { type: Number, require: true },
     types: { type: mongoose.Schema.Types.ObjectId, ref: "type", required: true },
-    publicCompany: { type: mongoose.Schema.Types.ObjectId, ref: 'nxb', require: true },
+    publicCompany: { type: mongoose.Schema.Types.ObjectId, ref: "nxb", require: true },
     category: [
         { type: String, require: true }
     ],

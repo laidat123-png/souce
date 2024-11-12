@@ -14,9 +14,9 @@ const userSchema = new mongoose.Schema({
         }
     ],
     phone: { type: String },
+    status: { type: String, required: true, default: "hoạt động" },
     address: { type: String }
 }, { timestamps: true })
-
 
 // userSchema.pre('save', function (next) {
 //     let user = this;

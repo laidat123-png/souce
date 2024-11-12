@@ -70,7 +70,7 @@ exports.deleteOneCode = async (req, res) => {
 
 exports.getOneCode = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; //// Lấy giá trị 'id' từ tham số của yêu cầu HTTP
         const code = await Code.findById(id);
         res.json({
             status: "success",

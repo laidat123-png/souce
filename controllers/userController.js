@@ -117,6 +117,23 @@ exports.getOneUser = async (req, res, next) => {
 
     }
 }
+exports.updateUserStatus = async (req, res, next) => {
+    try {
+        const { userID, status } = req.body; 
+        const user = await User.findById(userID);
+        if (!user) {
+            return res.status(404).json({ status: "failed", messenger: "Người dùng không tìm thấy" });
+        }
+       
+        user.status = status; 
+        await user.save();
+
+        res.status(200).json({ status: "success", user });
+    } catch (err) {
+        console.log("Err", err);
+        res.status(500).json({ status: "failed", messenger: "Lỗi server" });
+    }
+};
 
 // Hàm updateUser để cập nhật thông tin người dùng
 exports.updateUser = async (req, res, next) => {
